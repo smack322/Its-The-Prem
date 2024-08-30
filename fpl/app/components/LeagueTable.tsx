@@ -34,7 +34,7 @@ type LeagueTableProps = {
 };
 
 const LeagueTable: React.FC<LeagueTableProps> = ({ leagueData }) => {
-  console.log('Raw league data:', leagueData);
+  // console.log('Raw league data:', leagueData);
   const { league_entries, standings } = leagueData;
 
   // Create a map of IDs to league entries for quick lookup
