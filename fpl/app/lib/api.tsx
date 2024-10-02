@@ -5,7 +5,6 @@ export const fetchLeagueDetails = async (leagueId: number) => {
       `https://draft.premierleague.com/api/league/${leagueId}/details`,
       {
         method: 'GET',
-        cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
           Pragma: 'no-cache',
@@ -33,7 +32,6 @@ export const fetchCurrentGameWeek = async () => {
   try {
     const res = await fetch('https://draft.premierleague.com/api/game', {
       method: 'GET',
-      cache: 'no-store',
       headers: {
         'Cache-Control': 'no-cache',
         Pragma: 'no-cache',
@@ -62,7 +60,6 @@ export const fetchManagerLineup = async (entryId: number, eventId: number) => {
       `https://draft.premierleague.com/api/entry/${entryId}/event/${eventId}`,
       {
         method: 'GET',
-        cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
           Pragma: 'no-cache',
@@ -95,7 +92,6 @@ export const fetchPlayerData = async () => {
       'https://draft.premierleague.com/api/bootstrap-static',
       {
         method: 'GET',
-        cache: 'no-store',
         headers: {
           'Cache-Control': 'no-cache',
           Pragma: 'no-cache',
