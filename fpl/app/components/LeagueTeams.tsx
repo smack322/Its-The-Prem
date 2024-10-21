@@ -1,6 +1,13 @@
 import React from 'react';
 import Navbar from '@/app/components/Navbar';
 
+const positionMap: { [key: number]: string } = {
+  1: 'Goalkeeper',
+  2: 'Defender',
+  3: 'Midfielder',
+  4: 'Forward',
+};
+
 interface Player {
   id: number;
   web_name: string;
@@ -12,6 +19,7 @@ interface Player {
   news: string;
   expected_goal_involvements: number;
   expected_assists: number;
+  element_type: number;
 }
 
 interface GameWeek {
@@ -73,78 +81,118 @@ const LeagueTeams: React.FC<EPLComponentProps> = ({
     <div>
       <Navbar />
       <h1>Current Game Week: {currentGameWeek?.current_event}</h1>
-      {/* Create a table to display the data */}
-      <table
-        style={{ width: '100%', borderCollapse: 'collapse', margin: '20px 0' }}
-      >
-        <thead>
-          <tr style={{ backgroundColor: '#f2f2f2' }}>
-            {/* <th style={{ border: '1px solid #ddd', padding: '8px' }}>
-              Entry ID
-            </th> */}
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>
-              Team Name
-            </th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>
-              Team Owner
-            </th>
-            <th style={{ border: '1px solid #ddd', padding: '8px' }}>
-              Players
-            </th>
-          </tr>
-        </thead>
-        <tbody>
-          {lineups.map((lineup, index) =>
-            lineup ? (
-              <tr key={index}>
-                {/* <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  {entryIds[index]}
-                </td> */}
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  {teamNames[index]}
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  {teamOwners[index]}
-                </td>
-                <td style={{ border: '1px solid #ddd', padding: '8px' }}>
-                  <ul style={{ listStyleType: 'none', padding: 0 }}>
-                    {lineup.picks.map((pick: any) => {
-                      const player = playerMap.get(pick.element); // Get player data
-                      if (player) {
-                        return (
-                          <li key={pick.element}>
-                            {player.first_name || 'Unknown'}{' '}
-                            {player.second_name}, Position: {pick.position},
-                            Assists: {player.assists}, Clean Sheets:{' '}
-                            {player.clean_sheets}, Goals: {player.goals_scored},
-                            News: {player.news}, Expected Goal Involvements:{' '}
-                            {player.expected_goal_involvements}, Expected Assist
-                            Involvements:{player.expected_assists}
-                          </li>
-                        );
-                      }
-                      return (
-                        <li key={pick.element}>
-                          Unknown Player (ID: {pick.element})
-                        </li>
-                      );
-                    })}
-                  </ul>
-                </td>
-              </tr>
-            ) : (
-              <tr key={index}>
-                <td
-                  colSpan={4}
-                  style={{ border: '1px solid #ddd', padding: '8px' }}
-                >
-                  No lineup data available for Entry ID: {entryIds[index]}
-                </td>
-              </tr>
-            )
-          )}
-        </tbody>
-      </table>
+
+      {lineups.map((lineup, index) =>
+        lineup ? (
+          <div key={`team-${index}`}>
+            {/* Display a separate table for each team */}
+            <h2>Team: {teamNames[index]}</h2>
+            <h3>Owner: {teamOwners[index]}</h3>
+            <table
+              style={{
+                width: '100%',
+                borderCollapse: 'collapse',
+                margin: '20px 0',
+              }}
+            >
+              <thead>
+                <tr style={{ backgroundColor: '#f2f2f2' }}>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Player Name
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Position
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Goals
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Expected Goals
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Assists
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Expected Assists
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    Clean Sheets
+                  </th>
+                  <th style={{ border: '1px solid #ddd', padding: '8px' }}>
+                    News
+                  </th>
+                </tr>
+              </thead>
+              <tbody>
+                {lineup.picks.map((pick: any) => {
+                  const player = playerMap.get(pick.element); // Get player data
+                  if (player) {
+                    return (
+                      <tr key={`${index}-${pick.element}`}>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.first_name || 'Unknown'} {player.second_name}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {positionMap[player.element_type] ||
+                            'Unknown Position'}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.goals_scored}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.expected_goal_involvements}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.assists}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.expected_assists}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.clean_sheets}
+                        </td>
+                        <td
+                          style={{ border: '1px solid #ddd', padding: '8px' }}
+                        >
+                          {player.news}
+                        </td>
+                      </tr>
+                    );
+                  }
+                  return (
+                    <tr key={`${index}-${pick.element}`}>
+                      <td
+                        colSpan={8}
+                        style={{ border: '1px solid #ddd', padding: '8px' }}
+                      >
+                        Unknown Player (ID: {pick.element})
+                      </td>
+                    </tr>
+                  );
+                })}
+              </tbody>
+            </table>
+          </div>
+        ) : (
+          <div key={index}>
+            <h2>No lineup data available for Entry ID: {entryIds[index]}</h2>
+          </div>
+        )
+      )}
     </div>
   );
 };
